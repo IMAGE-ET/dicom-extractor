@@ -8,5 +8,6 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
 
 add_executable(dicom-extracter
         main.cpp
+	field.cpp
 	logxx/logxx.cpp
 )
