@@ -23,7 +23,7 @@ bool DateField::CheckValue() const {
                 return false;
         }
         for (size_t i = 0; i < 8; ++i){
-                if (value[i] < 0 || value[0] > 9){
+                if (value[i] < '0' || value[0] > '9'){
                         log(logxx::error) << "Detected non-numeric value at " << i + 1 << ": [" << value[i] << "]" << logxx::endl;
                         return false;
                 }
