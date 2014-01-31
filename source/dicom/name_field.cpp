@@ -1,4 +1,5 @@
 #include "name_field.h"
+#include <algorithm>
 
 logxx::Log NameField::cLog(Field::cLog, "NameField");
 
@@ -25,7 +26,7 @@ public:
                 if (pipe)
                         pclose(pipe);
         }
-        std::string Get() {
+        std::string Get(bool trim_eol = true) {
                 std::string result;
                 if (pipe){
                         static const size_t bufSize = 10;
@@ -33,6 +34,13 @@ public:
                         while(!feof(pipe)) {
                                 if(fgets(buffer, bufSize, pipe) != nullptr)
                                         result += buffer;
+                        }
+                        if (trim_eol){
+                                auto lastNonEol = std::find_if(result.rbegin(), result.rend(),
+                                        [](char c)->bool{
+                                                return c != '\n' && c != '\r';
+                                        });
+                                result.erase(lastNonEol.base(), result.end());
                         }
                 }
                 return result;
@@ -43,6 +51,7 @@ private:
 };
 
 void NameField::ProcessValue() {
+        Field::ProcessValue();
         S_LOG("ProcessValue");
         static const char delimiter = '^';
         auto delim_pos = value.find(delimiter);
