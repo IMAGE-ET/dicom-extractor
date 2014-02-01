@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <cstring>
 #include <algorithm>
 #include "field.h"
 
@@ -25,13 +26,28 @@ bool Field::Load(std::ifstream& f, int shift){
 	auto current = std::ios_base::cur;
 	if (f.good()){
 		f.seekg(shift, current);
-		uint8_t fieldLength(0);
-		fread(fieldLength);
+                log(logxx::debug) << "Current position: 0x" << std::hex << f.tellg() << std::dec << logxx::endl;
+                uint32_t fieldLength(0);
+                char optionalField[2];
+                f.read(optionalField, 2);
+                check_error(optionalField);
+                if (
+                        std::strncmp(optionalField, "PN", 2) == 0 ||
+                        std::strncmp(optionalField, "LO", 2) == 0 ||
+                        std::strncmp(optionalField, "DA", 2) == 0
+                        ){
+                        uint16_t shortFieldLength(0);
+                        fread(shortFieldLength);
+                        fieldLength = shortFieldLength;
+                } else{
+                        f.seekg(-2, std::ios_base::cur);
+                        fread(fieldLength);
+                }
+                
                 if (fieldLength == 0){
                         log(logxx::warning) << "Field length is zero, nothing to read!" << logxx::endl;
                         return false;
                 }
-		f.seekg(3, current);
 		std::unique_ptr<char[]> cValue(new char[fieldLength]);
 		f.read(cValue.get(), fieldLength);
 		check_error(cValue);
