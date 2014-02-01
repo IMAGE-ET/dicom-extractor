@@ -35,13 +35,14 @@ bool TestFile(const std::string& filename, const std::string &surname, const std
 }
 
 int main(){
-        logxx::GlobalLogLevel(logxx::debug);
+        logxx::GlobalLogLevel(logxx::notice);
 	S_LOG("main");
         return (
                 TestFile(DATA_DIR "1_16_37_40_1-cut.dcm", "иващенко", "тима", 8010, "20120101") &&
                 TestFile(DATA_DIR "10_21_16_57_1-cut.dcm", "егорова", "альгамбра", 31559, "19980930") &&
                 TestFile(DATA_DIR "28_10_14_45_1-cut.dcm", "Герасимчук", "Шейла", 39020, "20130528") &&
-                TestFile(DATA_DIR "31_16_16_31_1-cut.dcm", "искандерова", "матильда", 38742, "20130502")
+                TestFile(DATA_DIR "31_16_16_31_1-cut.dcm", "искандерова", "матильда", 38742, "20130502") &&
+                TestFile(DATA_DIR "21_20_15_27_2-cut.dcm", "селецкий", "бонита", 28776, "20091121")
                 ) ? 0 : 1;
         
 }
