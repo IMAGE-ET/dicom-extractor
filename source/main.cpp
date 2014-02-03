@@ -1,6 +1,6 @@
 #include "logxx/logxx.h"
 #include "dicom/dicom.h"
-#include "dirent.h"
+#include "dir.h"
 #include <fstream>
 
 static logxx::Log cLog("extractor");
@@ -24,26 +24,22 @@ int main(int argc, char **argv){
                 std::string csvFile = path + "out.csv";
                 std::ofstream out(csvFile);
                 if (out.good()){
-                        DIR *dir;
-                        if ((dir = opendir (path.c_str())) != nullptr) {
-                                dirent *ent;
-                                while ((ent = readdir (dir)) != nullptr) {
-                                        if (ent->d_type == DT_REG){
-                                                std::string fName = ent->d_name;
-                                                log(logxx::debug) << "{" << fName << "}" << logxx::endl;
-                                                Dicom dicom(path + fName);
-                                                if (dicom.Parse()){
-                                                        // cppcheck-suppress constStatement
-                                                        log(logxx::notice) << "{" << fName << "} Parsed" << logxx::endl;
-                                                        out << fName << "," << dicom << std::endl;
+                        Dir dir(path, true, ".dcm");
+                        if (dir.Ok()) {
+                                std::string fName;
+                                while ((fName = dir.Read()).empty() == false) {
+                                        log(logxx::debug) << "{" << fName << "}" << logxx::endl;
+                                        Dicom dicom(path + fName);
+                                        if (dicom.Parse()){
+                                                // cppcheck-suppress constStatement
+                                                log(logxx::notice) << "{" << fName << "} Parsed" << logxx::endl;
+                                                out << fName << "," << dicom << std::endl;
 
-                                                } else {
-                                                        // cppcheck-suppress constStatement
-                                                        log(logxx::notice) << "{" << fName << "} Not parsed" << logxx::endl;
-                                                }
+                                        } else {
+                                                // cppcheck-suppress constStatement
+                                                log(logxx::notice) << "{" << fName << "} Not parsed" << logxx::endl;
                                         }
                                 }
-                                closedir (dir);
                                 return 0;
                         } else {
                                 log(logxx::error) << "Can't open path {" << path << "}" << logxx::endl;
