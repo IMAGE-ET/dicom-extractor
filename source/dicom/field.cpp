@@ -44,8 +44,14 @@ bool Field::Load(std::ifstream& f, int shift){
                         fread(fieldLength);
                 }
                 
+                static const decltype(fieldLength) maxLength = 100;
+                
                 if (fieldLength == 0){
                         log(logxx::warning) << "Field length is zero, nothing to read!" << logxx::endl;
+                        return false;
+                } else if (fieldLength > maxLength){
+                        log(logxx::warning) << "Too large field: " << fieldLength <<
+                                "; maximum allowed is: " << maxLength << logxx::endl;
                         return false;
                 }
 		std::unique_ptr<char[]> cValue(new char[fieldLength]);
