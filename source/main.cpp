@@ -20,11 +20,11 @@ int main(int argc, char **argv){
                 std::string path(argv[1]);                
                 if (path[path.length()-1] != '/')
                         path += '/';
-                DIR *dir;
                 
                 std::string csvFile = path + "out.csv";
                 std::ofstream out(csvFile);
                 if (out.good()){
+                        DIR *dir;
                         if ((dir = opendir (path.c_str())) != nullptr) {
                                 dirent *ent;
                                 while ((ent = readdir (dir)) != NULL) {
@@ -33,10 +33,12 @@ int main(int argc, char **argv){
                                                 log(logxx::debug) << "{" << fName << "}" << logxx::endl;
                                                 Dicom dicom(path + fName);
                                                 if (dicom.Parse()){
+                                                        // cppcheck-suppress constStatement
                                                         log(logxx::notice) << "{" << fName << "} Parsed" << logxx::endl;
                                                         out << fName << "," << dicom << std::endl;
 
                                                 } else {
+                                                        // cppcheck-suppress constStatement
                                                         log(logxx::notice) << "{" << fName << "} Not parsed" << logxx::endl;
                                                 }
                                         }
