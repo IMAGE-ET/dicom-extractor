@@ -44,11 +44,11 @@ int main(int argc, char **argv){
                                         }
                                 }
                                 closedir (dir);
+                                return 0;
                         } else {
                                 log(logxx::error) << "Can't open path {" << path << "}" << logxx::endl;
                                 return 1;
                         }
-                        return 0;
                 } else {
                         log(logxx::error) << "Can't open file {" << csvFile <<  "} for writing"  << logxx::endl;
                         return 1;
