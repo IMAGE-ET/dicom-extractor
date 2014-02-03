@@ -27,7 +27,7 @@ int main(int argc, char **argv){
                         DIR *dir;
                         if ((dir = opendir (path.c_str())) != nullptr) {
                                 dirent *ent;
-                                while ((ent = readdir (dir)) != NULL) {
+                                while ((ent = readdir (dir)) != nullptr) {
                                         if (ent->d_type == DT_REG){
                                                 std::string fName = ent->d_name;
                                                 log(logxx::debug) << "{" << fName << "}" << logxx::endl;
