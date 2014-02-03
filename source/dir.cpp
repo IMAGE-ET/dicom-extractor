@@ -1,10 +1,3 @@
-/* 
- * File:   dir.cpp
- * Author: mexus
- * 
- * Created on February 3, 2014, 1:17 PM
- */
-
 #include "dir.h"
 
 Dir::Dir(const std::string& path, bool onlyFiles, const std::string& extension) :
