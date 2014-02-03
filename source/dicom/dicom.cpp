@@ -55,7 +55,7 @@ bool Dicom::Parse() {
                                 userName = nameField.GetUserName();
                                 pet = nameField.GetPet();
                                 id = idField.GetIntValue();
-                                date = dateField.GetValue();
+                                date = dateField.GetDate();
                                 return true;
                         } else {
                                 log(logxx::error) << "Can't parse a file {" << fileName << "}" << logxx::endl;

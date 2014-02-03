@@ -8,6 +8,8 @@ public:
         DateField();
         virtual ~DateField();
         
+        std::string GetDate() const;
+        
 protected:
         virtual void ProcessValue();
         static logxx::Log cLog;

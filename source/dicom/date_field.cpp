@@ -39,4 +39,6 @@ void DateField::ProcessValue() {
                 value.clear();
 }
 
-
+std::string DateField::GetDate() const {
+        return date;
+}
