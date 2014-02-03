@@ -62,7 +62,7 @@ bool Dicom::Parse() {
                                 return false;
                         }
                 } else {
-                        log(logxx::error) << "Can't find kodak string in a file " << fileName << "}" << logxx::endl;
+                        log(logxx::error) << "Can't find kodak string in a file {" << fileName << "}" << logxx::endl;
                         return false;
                 }
         } else {
