@@ -108,16 +108,22 @@ std::string EncodingConverter::InteractiveConvert(const std::string& val) {
         if (val.empty())
                 return val;
         else {
-                std::vector<std::string> conversions;
-                int i(0);
-                for (auto &enc : encodings){
-                        std::string res = ConvertString(val, enc);
-                        log(logxx::info, i++, enc) << "{" << res << "}" << logxx::endl;
-                        conversions.push_back(res);
+                auto known = knownConversions.find(val);
+                if (known != knownConversions.end()){
+                        return known->second;
+                } else {
+                        std::vector<std::string> conversions;
+                        int i(0);
+                        for (auto &enc : encodings){
+                                std::string res = ConvertString(val, enc);
+                                log(logxx::info, i++, enc) << "{" << res << "}" << logxx::endl;
+                                conversions.push_back(res);
+                        }
+                        log(logxx::info) << "Select conversion: " << logxx::endl;
+                        std::cin >> i;
+                        knownConversions[val] = conversions[i];
+                        return conversions[i];
                 }
-                log(logxx::info) << "Select conversion: " << logxx::endl;
-                std::cin >> i;
-                return conversions[i];
         }
         
 }

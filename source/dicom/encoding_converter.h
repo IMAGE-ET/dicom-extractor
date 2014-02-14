@@ -29,6 +29,7 @@ public:
 private:
         TempFile tempFile;
         std::set<std::string> encodings;
+        std::map<std::string, std::string> knownConversions;
 
         void WriteString(const std::string&);
         std::string ReadString(const std::string &fileName = std::string());
