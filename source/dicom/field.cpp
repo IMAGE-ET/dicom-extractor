@@ -62,8 +62,9 @@ bool Field::Load(std::ifstream& f, int shift){
 			ProcessValue();
 			return true;
 		} catch (const std::exception& e){
-			log(logxx::error) << "Can't copy value to std::string: " << e.what() << logxx::endl;
-			return false;
+			log(logxx::warning) << "Cought an exception: " << e.what() << logxx::endl;
+			value.assign('%', fieldLength);
+			return true;
 		}
 	} else {
 		log(logxx::error) << "Can't read file" << logxx::endl;
