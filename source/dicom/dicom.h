@@ -3,21 +3,22 @@
 
 #include <string>
 #include "../logxx/logxx.h"
+#include "encoding_converter.h"
 
 class Dicom {
 public:
         Dicom(const std::string &fileName);
         virtual ~Dicom();
         
-        bool Parse();
+        bool Parse(EncodingConverter &converter);
         
         std::string GetName() const;
         std::string GetPet() const;
-        int GetId() const;
+        long long int GetId() const;
         std::string GetDate() const;
 private:
         std::string fileName, userName, pet, date;
-        int id = 0;
+        long long int id = 0;
         
         static logxx::Log cLog;
 

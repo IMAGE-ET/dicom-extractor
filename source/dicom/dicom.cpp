@@ -16,7 +16,7 @@ std::string Dicom::GetDate() const {
         return date;
 }
 
-int Dicom::GetId() const {
+long long int Dicom::GetId() const {
         return id;
 }
 
@@ -42,13 +42,13 @@ bool LookupString(std::ifstream& f, const std::string& str){
         return false;
 }
 
-bool Dicom::Parse() {
+bool Dicom::Parse(EncodingConverter &converter) {
         S_LOG("Parse");
         std::ifstream in(fileName, std::ios_base::binary);
         if (in.good()){
                 static const std::string kodakString("Kodak Point-of-Care CR 120 140 System");
                 if (LookupString(in, kodakString)){
-                        NameField nameField;
+                        NameField nameField(converter);
                         IntegerField idField;
                         DateField dateField;
                         if (nameField.Load(in, 17) && idField.Load(in, 4) && dateField.Load(in, 4)){
