@@ -8,12 +8,12 @@ public:
         IntegerField();
         virtual ~IntegerField();
         
-        int GetIntValue() const;
+        long long int GetIntValue() const;
 protected:
         virtual void ProcessValue();
 
 private:
-        int intValue = 0;
+        long long int intValue = 0;
 
 };
 

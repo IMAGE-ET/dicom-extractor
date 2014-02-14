@@ -15,9 +15,14 @@ IntegerField::~IntegerField() {
 
 void IntegerField::ProcessValue() {
         Field::ProcessValue();
-        intValue = std::stoi(value);
+        try {
+                intValue = std::stoll(value);
+        } catch (const std::exception &e) {
+                intValue = 0;
+                throw std::runtime_error("IntegerField::ProcessValue: Can't convert {" + value + "} to integer: " + e.what());
+        }
 }
 
-int IntegerField::GetIntValue() const {
+long long int IntegerField::GetIntValue() const {
         return intValue;
 }
