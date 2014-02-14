@@ -9,6 +9,7 @@ add_executable(dicom-extracter
         dicom/integer_field.cpp
         dicom/name_field.cpp
         dicom/dicom.cpp
+        dicom/encoding_converter.cpp
 
 	logxx/logxx.cpp
 )

@@ -16,5 +16,6 @@ add_executable(dicom-extractor-test
         ../source/dicom/name_field.cpp
         ../source/dicom/integer_field.cpp
         ../source/dicom/dicom.cpp
+        ../source/dicom/encoding_converter.cpp
 
 )

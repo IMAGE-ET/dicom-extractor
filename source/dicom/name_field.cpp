@@ -3,7 +3,7 @@
 
 logxx::Log NameField::cLog(Field::cLog, "NameField");
 
-NameField::NameField() : Field() {
+NameField::NameField(EncodingConverter &converter) : Field(), converter(converter) {
 }
 
 NameField::~NameField() {
@@ -17,56 +17,26 @@ std::string NameField::GetUserName() const {
         return userName;
 }
 
-class Pipe {
-public:
-        Pipe(const std::string& command, const char* modes = "r"){
-                pipe = popen(command.c_str(), modes);
-        }
-        ~Pipe(){
-                if (pipe)
-                        pclose(pipe);
-        }
-        std::string Get(bool trim_eol = true) {
-                std::string result;
-                if (pipe){
-                        static const size_t bufSize = 10;
-                        char buffer[bufSize];
-                        while(!feof(pipe)) {
-                                if(fgets(buffer, bufSize, pipe) != nullptr)
-                                        result += buffer;
-                        }
-                        if (trim_eol){
-                                auto lastNonEol = std::find_if(result.rbegin(), result.rend(),
-                                        [](char c)->bool{
-                                                return c != '\n' && c != '\r';
-                                        });
-                                result.erase(lastNonEol.base(), result.end());
-                        }
-                }
-                return result;
-        }
-        bool Ok() const {return pipe;}
-private:
-        FILE *pipe = nullptr;
-};
-
 void NameField::ProcessValue() {
         Field::ProcessValue();
         S_LOG("ProcessValue");
         static const char delimiter = '^';
         auto delim_pos = value.find(delimiter);
         if (delim_pos == std::string::npos)
-                log(logxx::error) << "Can't find a dilimiter charecter [" << delimiter << "]" << logxx::endl;
+                log(logxx::error) << "Can't find a delimiter charecter [" << delimiter << "]" << logxx::endl;
         else {
-                Pipe enconvPipe("echo \"" + value +  "\" | enconv -Lru -xUTF8");
-                if (enconvPipe.Ok()){
-                        std::string encoded = enconvPipe.Get();
-                        delim_pos = encoded.find(delimiter);
-                        
-                        userName = encoded.substr(0, delim_pos);
-                        pet = encoded.substr(delim_pos + 1);
-                } else
-                        log(logxx::error) << "Can't open pipe" << logxx::endl;
+                value = converter.AutoConvertString(value, true);
+                if (!value.empty()){
+                        delim_pos = value.find(delimiter);
+                        if (delim_pos == std::string::npos){
+                                log(logxx::error) << "Can't find a delimiter after encoding conversion" << logxx::endl;
+                        } else {
+                                userName = value.substr(0, delim_pos);
+                                pet = value.substr(delim_pos + 1);
+                        }
+                } else {
+                        userName = pet = value = "[NOT ENCODED]";
+                }
         }
 }
 

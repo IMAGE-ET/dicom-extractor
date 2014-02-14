@@ -13,6 +13,7 @@ std::ostream& operator<<(std::ostream& s, const Dicom & d){
 int main(int argc, char **argv){
 	S_LOG("main");
         logxx::GlobalLogLevel(logxx::warning);
+        EncodingConverter converter;
         if (argc < 2){
                 log(logxx::error) << "A path with dicom files should be specified" << logxx::endl;
                 return 1;
@@ -30,7 +31,7 @@ int main(int argc, char **argv){
                                 while ((fName = dir.Read()).empty() == false) {
                                         log(logxx::debug) << "{" << fName << "}" << logxx::endl;
                                         Dicom dicom(path + fName);
-                                        if (dicom.Parse()){
+                                        if (dicom.Parse(converter)){
                                                 // cppcheck-suppress constStatement
                                                 log(logxx::notice) << "{" << fName << "} Parsed" << logxx::endl;
                                                 out << fName << "," << dicom << std::endl;
