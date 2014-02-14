@@ -10,6 +10,20 @@ std::ostream& operator<<(std::ostream& s, const Dicom & d){
         return s;
 }
 
+void PrintProgress(){
+        S_LOG("PrintProgress");
+        static time_t start = time(nullptr);
+        static const time_t interval = 10;
+        static int counter = 0;
+        
+        time_t now = time(nullptr);
+        ++counter;
+        if (now > start + interval){
+                start = now;
+                log(logxx::info) << counter << logxx::endl;
+        }
+}
+
 int main(int argc, char **argv){
 	S_LOG("main");
         logxx::GlobalLogLevel(logxx::warning);
@@ -40,6 +54,7 @@ int main(int argc, char **argv){
                                                 // cppcheck-suppress constStatement
                                                 log(logxx::notice) << "{" << fName << "} Not parsed" << logxx::endl;
                                         }
+                                        PrintProgress();
                                 }
                                 return 0;
                         } else {
